@@ -1,0 +1,28 @@
+schemaVersion: '2.0.0'
+metadataTest:
+    env:
+    - key: 'ASPNETCORE_URLS'
+      value: 'http://+:80'
+    - key: 'DOTNET_RUNNING_IN_CONTAINER'
+      value: 'true'
+    
+    workdir: "/app"
+    exposedPorts: ["80"]
+
+fileExistenceTests:
+# check that the apt-packages text file exists and has the correct permissions
+  - name: 'test project is not published'
+    path: '/app/Echo.Api.Tests.dll'
+    shouldExist: false
+
+  - name: 'source code is not copied'
+    path: '/app/*.cs'
+    shouldExist: false
+
+commandTests:
+  - name: 'dotnet sdk is not installed'
+    command: 'dotnet'
+    args: ["--list-sdks"]
+    excludedOutput: [".*sdk*"]
+
+    
